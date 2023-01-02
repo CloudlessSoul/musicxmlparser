@@ -24,7 +24,7 @@ public class Main {
         var musicXmlParserListener = new MusicXmlParserListener();
         xmlParser.addParserListener(musicXmlParserListener);
 
-        var score = getFileFromResource("lossofme.xml");
+        var score = getFileFromResource("patterns.xml");
         xmlParser.parse(score);
 
         Player player = new Player();
@@ -40,10 +40,6 @@ public class Main {
         if (resource == null) {
             throw new IllegalArgumentException("file not found! " + fileName);
         } else {
-
-            // failed if files have whitespaces or special characters
-            //return new File(resource.getFile());
-
             return new File(resource.toURI());
         }
 

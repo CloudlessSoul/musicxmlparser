@@ -99,7 +99,7 @@
             </dynamics>
           </direction-type>
         <staff>1</staff>
-        <sound dynamics="106.67"/>
+<!--        <sound dynamics="106.67"/>-->
         </direction>
       <direction placement="above">
         <direction-type>
@@ -438,7 +438,7 @@
             </dynamics>
           </direction-type>
         <staff>1</staff>
-        <sound dynamics="106.67"/>
+<!--        <sound dynamics="106.67"/>-->
         </direction>
       <note default-x="20.96" default-y="35.00">
         <pitch>
@@ -776,7 +776,7 @@
             </dynamics>
           </direction-type>
         <staff>1</staff>
-        <sound dynamics="106.67"/>
+<!--        <sound dynamics="106.67"/>-->
         </direction>
       <note default-x="22.82" default-y="15.00">
         <pitch>

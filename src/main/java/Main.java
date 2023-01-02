@@ -4,6 +4,7 @@ import org.jfugue.integration.MusicXmlParserListener;
 import org.jfugue.midi.MidiParserListener;
 import org.jfugue.parser.ParserListener;
 import org.jfugue.pattern.Pattern;
+import org.jfugue.pattern.Token;
 import org.jfugue.player.Player;
 import org.jfugue.theory.Chord;
 import org.jfugue.theory.Note;
@@ -14,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws ParserConfigurationException, IOException, ParsingException, URISyntaxException {
@@ -41,10 +44,48 @@ public class Main {
         var pattern = staccatoParserListener.getPattern();
 
 
+        var layerPatterns = extractLayers(pattern);
+
+        var layer = layerPatterns.get("L0");
+        System.out.println("Playing: " +  layer.toString());
+        player.play(layer);
+
+        layer = layerPatterns.get("L1");
+        System.out.println("Playing: " +  layer.toString());
+        player.play(layer);
+
+        layer = layerPatterns.get("L4");
+        System.out.println("Playing: " +  layer.toString());
+        player.play(layer);
+
+        layer = layerPatterns.get("L6");
+        System.out.println("Playing: " +  layer.toString());
+        player.play(layer);
+    }
+
+    private static Map<String, Pattern> extractLayers(Pattern pattern) {
+        Map<String, Pattern> layerPatterns = new HashMap<>();
         System.out.println("Pattern parsed is: ");
-        pattern.getTokens().forEach(p -> {
+        String currentLayer = "L0";
+        Pattern currentPattern = new Pattern();
+        layerPatterns.put(currentLayer, currentPattern);
+        for (Token p : pattern.getTokens()) {
+            if (p.getType() == Token.TokenType.LAYER) {
+                currentLayer = p.getPattern().toString();
+                if (!layerPatterns.containsKey(currentLayer)) {
+                    layerPatterns.put(currentLayer, new Pattern());
+                }
+                currentPattern = layerPatterns.get(currentLayer);
+            }
+            if (p.getType() == Token.TokenType.NOTE && currentLayer != null && currentPattern != null) {
+                currentPattern.add(p.getPattern());
+            }
             System.out.println(p.getType() + ":" + p.getPattern().toString());
-            });
+        }
+
+        System.out.println("Available layers: " + layerPatterns.keySet().stream().reduce("", (layer, n) -> layer + n +  ", "));
+
+        return layerPatterns;
     }
 
     private static void playWithMusicXmlParsing() throws ParserConfigurationException, URISyntaxException, ParsingException, IOException {

@@ -3,9 +3,11 @@ import org.jfugue.integration.MusicXmlParser;
 import org.jfugue.integration.MusicXmlParserListener;
 import org.jfugue.midi.MidiParserListener;
 import org.jfugue.parser.ParserListener;
+import org.jfugue.pattern.Pattern;
 import org.jfugue.player.Player;
 import org.jfugue.theory.Chord;
 import org.jfugue.theory.Note;
+import org.staccato.StaccatoParserListener;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -15,6 +17,37 @@ import java.net.URL;
 
 public class Main {
     public static void main(String[] args) throws ParserConfigurationException, IOException, ParsingException, URISyntaxException {
+        playWithPatterns();
+        // playWithMusicXmlParsing();
+    }
+
+    private static void playWithPatterns() throws URISyntaxException, ParserConfigurationException, ParsingException, IOException {
+        var score = getFileFromResource("choralemmwa.xml");
+
+        MusicXmlParser xmlParser = new MusicXmlParser();
+
+        StaccatoParserListener staccatoParserListener = new StaccatoParserListener();
+        xmlParser.addParserListener(staccatoParserListener);
+
+        var midiParserListener = new MidiParserListener();
+        xmlParser.addParserListener(midiParserListener);
+
+        xmlParser.parse(score);
+
+        Player player = new Player();
+        var midiSequence = midiParserListener.getSequence();
+        player.play(midiSequence);
+
+        var pattern = staccatoParserListener.getPattern();
+
+
+        System.out.println("Pattern parsed is: ");
+        pattern.getTokens().forEach(p -> {
+            System.out.println(p.getType() + ":" + p.getPattern().toString());
+            });
+    }
+
+    private static void playWithMusicXmlParsing() throws ParserConfigurationException, URISyntaxException, ParsingException, IOException {
         MusicXmlParser xmlParser = new MusicXmlParser();
         xmlParser.addParserListener(new DebugParserListener());
 

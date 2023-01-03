@@ -43,7 +43,6 @@ public class Main {
 
         var pattern = staccatoParserListener.getPattern();
 
-
         var layerPatterns = extractLayers(pattern);
 
         var layer = layerPatterns.get("L0");
@@ -98,7 +97,7 @@ public class Main {
         var musicXmlParserListener = new MusicXmlParserListener();
         xmlParser.addParserListener(musicXmlParserListener);
 
-        var score = getFileFromResource("patterns.xml");
+        var score = getFileFromResource("stringthing.xml");
         xmlParser.parse(score);
 
         Player player = new Player();
